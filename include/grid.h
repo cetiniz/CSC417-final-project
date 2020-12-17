@@ -33,7 +33,7 @@ namespace grid{
       struct Cell {
         CellTypes type;
         int layer;
-        std::vector<Cell> neighbours;
+        std::vector<Cell*> neighbours;
         EigenVector v;
         EigenVector tmpV;
 
@@ -44,7 +44,7 @@ namespace grid{
 
       static const bool eq(const EigenVector& lhs, const EigenVector& rhs){ return lhs == rhs; };
       static const std::size_t hash (const EigenVector & n){ return (std::size_t)(n*Eigen::Vector3d{541 + 79 + 31});};
-      typedef std::unordered_map<EigenVector, Cell, decltype(hash), decltype(eq)> SparseGrid;
+      typedef std::unordered_map<EigenVector, Cell*, decltype(hash), decltype(eq)> SparseGrid;
 
     public:
       MacGrid(int h, EigenVector o) :
@@ -64,11 +64,11 @@ namespace grid{
         return this->sparseGrid.count(e) > 0;
       }
 
-      bool containsCell(Cell& c) {
+      bool containsCell(Cell* c) {
         return this->sparseGrid.count(c.origin);
       }
 
-      Cell getCellFromParticle(EigenVector& e) {
+      Cell* getCellFromParticle(EigenVector& e) {
 
       }
 
@@ -94,7 +94,7 @@ namespace grid{
         }
       }
 
-      std::vector<Cell> generateNeighboursFromCell(Cell& c) {
+      std::vector<Cell*> generateNeighboursFromCell(Cell* c) {
 
       }
 
@@ -102,7 +102,7 @@ namespace grid{
         return this->markers;
       }
 
-      Cell operator[](EigenVector& e) {
+      Cell* operator[](EigenVector& e) {
         return sparseGrid[e];
       }
 

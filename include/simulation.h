@@ -60,57 +60,17 @@ namespace simulation{
          */
         void simulate_one_step(Eigen::MatrixXd &q, Eigen::MatrixXd &qdot, Eigen::VectorXd& forces,
                                grid::GridDense2D& grid) override {
-          this->advect(q, qdot);
-          for (int prtc = 0; prtc < q.rows(); prtc++){
-            Eigen::Vector3d prtc_q = q.row(prtc);
-            Eigen::Vector3d prtc_qdot = qdot.row(prtc);
-
-            // 1) Advect
-            prtc_q += prtc_qdot * dt;
+            // 1) Update total time
+            this->time += dt;
 
             // 2) Update grid
             this->updateGrid();
 
-            // 3a) Adject velocity field
-            this->adjectVelocityField();
+            // 3) Apply forces
+            this->applyForces();
 
-            // Apply external forces to cells that border fluid cells
-            prtc_qdot += gravity * dt;
-            q.row(prtc) = prtc_q;
-            qdot.row(prtc) = prtc_qdot;
-
-            // Apply viscosity term
-
-            // Calculate pressure
-
-            // Apply pressure
-
-            // Extrapolate fluid velocities into surrounding cells
-            for (auto& cell : this->macGrid) {
-              cell.layer = cell.type == grid::CellTypes::FLUID ? 0 : -1;
-            }
-            for (int i = 1; i < std::max(2, kfcl); i++) {
-              for (auto& cell : this->macGrid) {
-                if (cell.layer != -1)
-                  continue;
-                // if cell has neighbour with layer == i-1
-              }
-            }
-
-            // Set the velocities that point to solid cells
-            for (auto& cell : this->macGrid) {
-            }
-
-            // Move the marker particles through the fluid
-            for (auto& p : this->particles) {
-              // Determine if frame should be rendered
-              if (this->time % this->fps) {
-                p.p = p.p + p.v * this->dt;
-              } else {
-                // RK4 Method
-              }
-            }
-          }
+            // 4) Move the marker particles through the fluid
+            this->moveParticles();
         }
 
       /*
@@ -166,9 +126,90 @@ namespace simulation{
         // TODO: Delete any cell with layer == -1
       }
 
+      void applyForces() {
+        // 3a) Adject velocity field
+        this->adjectVelocityField();
+
+        // 3b) Apply external forces to cells that border fluid cells
+        this->applyExternalForces();
+
+        // 3c) Apply viscosity term
+        this->applyViscosity();
+
+        // 3d) Calculate pressure
+        this->calculatePressure();
+
+        // 3e) Apply pressure
+        this->applyPressure();
+
+        // 3f) Extrapolate fluid velocities into surrounding cells
+        this->extrapolateFluids();
+
+        // 3g) Set the velocities that point to solid cells
+        for (auto& cell : this->macGrid) {
+        }
+      }
+
       void adjectVelocityField() {
         for (auto& cell : this->macGrid) {
 
+        }
+      }
+
+      /*
+       * Apply gravity to the grid
+       */
+      void applyExternalForces() {
+      }
+
+      /*
+       * Apply viscosity term
+       */
+      void applyViscosity() {
+
+      }
+
+      /*
+       * Calculate pressure
+       */
+      void calculatePressure() {
+
+      }
+
+      /*
+       * Apply pressure
+       */
+      void applyPressure() {
+
+      }
+
+      /*
+       * Extrapolate fluid velocities into surrounding cells
+       */
+      void extrapolateFluids() {
+        for (auto& cell : this->macGrid) {
+          cell.layer = cell.type == grid::CellTypes::FLUID ? 0 : -1;
+        }
+        for (int i = 1; i < std::max(2, kfcl); i++) {
+          for (auto& cell : this->macGrid) {
+            if (cell.layer != -1)
+              continue;
+            // if cell has neighbour with layer == i-1
+          }
+        }
+      }
+
+      /*
+       * Move particles through the fluid
+       */
+      void moveParticles() {
+        for (auto& p : this->particles) {
+          // Determine if frame should be rendered
+          if (this->time % this->fps) {
+            p.p = p.p + p.v * this->dt;
+          } else {
+            // RK4 Method
+          }
         }
       }
 
@@ -192,8 +233,8 @@ namespace simulation{
       }
     };
 
-//Simulation objects
-GeneralSimulation<Eigen::Vector2d> water_sim;
+    //Simulation objects
+    GeneralSimulation<Eigen::Vector2d> water_sim;
 }
 
 #endif //A6_RIGID_BODIES_CONTACT_SIMULATION_H
