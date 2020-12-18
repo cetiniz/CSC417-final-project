@@ -61,7 +61,9 @@ namespace grid{
       }
 
       bool containsParticle(EigenVector& e) {
-        return this->sparseGrid.count(e) > 0;
+        // Aquire keys into sparse grid using internal method
+        EigenVector key = this->_getKeyFromPosition();
+        return this->sparseGrid.count(key) > 0;
       }
 
       bool containsCell(Cell* c) {
@@ -69,6 +71,9 @@ namespace grid{
       }
 
       Cell* getCellFromParticle(EigenVector& e) {
+        // Aquire keys into sparse grid using internal method
+        EigenVector key = this->_getKeyFromPosition();
+
 
       }
 
@@ -78,19 +83,6 @@ namespace grid{
           ne = (e / this->height) - (EigenVector::Identity() * 0.5);
           ne(i) += 0.5;
           ne(i) = this->_calculateInterpretedVelocity(ne,i);
-        }
-      }
-
-      double _calculateInterpretedVelocity(EigenVector ne, int index) {
-        if (ne.size() == 3) {
-          int i = std::floor(ne(0));
-          int j = std::floor(ne(1));
-          int k = std::floor(ne(2));
-
-          // @TODO - finish interpreted velocity
-          return 0.0;
-        } else if (ne.size() == 2) {
-
         }
       }
 
@@ -111,6 +103,35 @@ namespace grid{
       EigenVector origin;
       double height{};
       SparseGrid sparseGrid;
+
+      /*
+       * This function calculates interpolated velocity
+       */
+      double _calculateInterpretedVelocity(EigenVector ne, int index) {
+        if (ne.size() == 3) {
+          int i = std::floor(ne(0));
+          int j = std::floor(ne(1));
+          int k = std::floor(ne(2));
+
+          // @TODO - finish interpreted velocity
+          return 0.0;
+        } else if (ne.size() == 2) {
+
+        }
+      }
+
+      /*
+       * This function is used to generate keys for the
+       * hashmap.
+       */
+      EigenVector _getKeyFromPosition(EigenVector& pos) {
+        // Rule for now is round to closest height for each
+        EigenVector out;
+        for (int i = 0; i < pos.size(); i++) {
+          out(i) = this->height * std::floor(pos(i) / this->height);
+        }
+        return out;
+      }
     };
 
 class Grid {
