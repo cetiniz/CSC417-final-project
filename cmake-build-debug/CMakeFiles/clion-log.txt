@@ -1,0 +1,9 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/mac/CSC417-final-project
+CMake Error at /Users/mac/CSC2549-a1-mass-spring-1d/cmake-build-debug/libigl-config.cmake:39 (message):
+  Could not find required dependency Eigen3
+Call Stack (most recent call first):
+  CMakeLists.txt:14 (find_package)
+
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/mac/CSC417-final-project/cmake-build-debug/CMakeFiles/CMakeOutput.log".

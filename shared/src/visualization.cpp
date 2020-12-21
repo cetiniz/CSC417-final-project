@@ -246,10 +246,10 @@ bool Visualize::plot_phase_space(const char *label, ImVec2 q_bounds, ImVec2 q_do
         return true;
     }
 
-    void Visualize::setup(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot, bool ps_plot) {
+    void Visualize::setup(bool ps_plot) {
 
-        g_q = &q;
-        g_qdot = &qdot;
+//        g_q = &q;
+//        g_qdot = &qdot;
 
         //add new menu for phase space plotting
         Visualize::g_viewer.plugins.push_back(&menu);
@@ -375,6 +375,7 @@ bool Visualize::plot_phase_space(const char *label, ImVec2 q_bounds, ImVec2 q_do
          g_viewer.data_list[g_id[id]].dirty |= igl::opengl::MeshGL::DIRTY_POSITION;
     }
 
+
     const std::vector<unsigned int> & Visualize::picked_vertices() {
         return g_picked_vertices;
     }
@@ -393,15 +394,14 @@ bool Visualize::plot_phase_space(const char *label, ImVec2 q_bounds, ImVec2 q_do
                 g_viewer.core().viewport,
                 g_mouse_world);
 
-//        //if you click on the mesh select the vertex, otherwise do nothing
-//        if(pick_nearest_vertices(g_picked_vertices, g_mouse_win,
-//                                 g_viewer.core().view, g_viewer.core().proj, g_viewer.core().viewport,
-//                                 g_geometry[0].first, g_geometry[0].second, g_picking_tol)) {
-//
-//            g_selected_obj = 0;
-//            g_mouse_dragging = true;
-//
-//        }
+        // If you click on the mesh select the vertex, otherwise do nothing
+        if (pick_nearest_vertices(g_picked_vertices, g_mouse_win,
+                                 g_viewer.core().view, g_viewer.core().proj, g_viewer.core().viewport,
+                                 g_geometry[0].first, g_geometry[0].second, g_picking_tol)) {
+
+            g_selected_obj = 0;
+            g_mouse_dragging = true;
+        }
         
         return false;
     }

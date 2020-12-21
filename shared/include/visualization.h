@@ -30,7 +30,7 @@ namespace Visualize {
     void add_energy(float t, float T, float V);
     bool plot_energy(const char *label, unsigned int type, ImVec2 T_bounds, ImVec2 V_bounds, ImU32 plot_col);
     
-    void setup(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot, bool ps_plot = false);
+    void setup(bool ps_plot = false);
 
     void add_object_to_scene(const Eigen::MatrixXd &V, const Eigen::MatrixXi &F, const Eigen::MatrixXd &V_skin,
                              const Eigen::MatrixXi &F_skin,  const Eigen::SparseMatrixd &N, Eigen::RowVector3d color);
@@ -67,6 +67,8 @@ namespace Visualize {
     void toggle_skinning(bool skinning);
 
     const Eigen::MatrixXd & geometry(unsigned int id);
+
+    void draw_particles(Eigen::MatrixXd& q, int id);
 }
 
 

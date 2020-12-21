@@ -35,7 +35,6 @@ bool draw_callback(igl::opengl::glfw::Viewer &viewer) {
 int main(int argc, char **argv) {
 
     std::cout<<"Start 2d fluid simulation\n";
-
     //assignment specific setup
     assignment_setup(argc, argv, q, qdot, dt);
 
@@ -44,8 +43,9 @@ int main(int argc, char **argv) {
     simulation_thread.detach();
 
     //setup libigl viewer and activate 
-    Visualize::setup(q, qdot, true);
+    Visualize::setup(true);
     Visualize::viewer().callback_post_draw = &draw_callback;
+    Visualize::viewer().callback_key_down = key_down_callback;
     Visualize::viewer().launch();
 
     return 1; 
